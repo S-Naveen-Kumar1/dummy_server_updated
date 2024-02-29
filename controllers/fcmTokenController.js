@@ -8,6 +8,7 @@ const postFcmToken= async(req,res)=>{
         await fcm.save()
         res.status(200).json({msg:"fcm token added successfully",details:req.body})
     }
+    
     catch(err){
         res.status(400).json({err:err.message})
     }
