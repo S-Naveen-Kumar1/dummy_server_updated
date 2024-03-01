@@ -1,3 +1,4 @@
+const FcmModel = require("../models/fcm.model")
 const UserModel = require("../models/user.model")
 const bcrypt = require('bcrypt')
 
@@ -25,6 +26,34 @@ const registerUser = async(req,res)=>{
     }
    
 }
+
+const fcmUser = async (req, res) => {
+    const { email, name, fcmtoken } = req.body;
+    console.log(email, name);
+
+    try {
+        if (!email || !name) {
+            res.status.send({ message: 'Email and name are required fields!' });
+        } else {
+            const newUser = new FcmModel({ email, name, fcmtoken });
+            await newUser.save();
+            res.send({ message: 'fcm token stored successfully' });
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+};
+
+const getAllfcm = async (req, res) => {
+    try {
+        const users = await FcmModel.find();
+        res.status(200).send({users});
+    } catch (error) {
+        console.error('Error getting users:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
 
 const loginUser = async (req,res)=>{
     const {email,password,name} = req.body
@@ -56,4 +85,4 @@ const loginUser = async (req,res)=>{
 }
 
 
-module.exports = {registerUser,loginUser}
+module.exports = {registerUser,loginUser,getAllfcm,fcmUser}

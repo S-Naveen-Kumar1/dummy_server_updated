@@ -8,6 +8,7 @@ const serviceAccount = require('./utils/productsapp-89db0-firebase-adminsdk-h6c3
 const cors = require('cors');
 const { fcmTokenRouter } = require('./routes/fcmRoutes');
 const FcmTokenModel = require('./models/fcmToken.model');
+const FcmModel = require('./models/fcm.model');
 const app = express()
 app.use(express.json())
 app.use(cors())
@@ -20,29 +21,65 @@ app.use("/fcm",fcmTokenRouter)
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
-app.post('/send-notification', async(req, res) => {
+// app.post('/send-notification', async(req, res) => {
+//   // const registrationToken = req.body.token; // Assuming you are sending the token in the request body
+//   const fcmTokens=await FcmTokenModel.find()
+//   console.log(fcmTokens[fcmTokens.length-1])
+//   const registrationToken = fcmTokens[fcmTokens.length-1].fcmToken
+//   console.log("test",req.body)
+//   const message = {
+//     notification: {
+//       title: 'Notification Title',
+//       body: 'Notification Body',
+//     },
+//     token: registrationToken,
+//     data:{"screen":"Dashboard"}
+//   };
+
+//   admin.messaging().send(message)
+//     .then((response) => {
+//       console.log('Successfully sent message:', response);
+//       res.status(200).json({ success: true, message: 'Notification sent successfully' });
+//     })
+//     .catch((error) => {
+//       console.error('Error sending message:', error);
+//       res.status(500).json({ success: false, error: 'Failed to send notification' });
+//     });
+// });
+app.post("/send-notification", async (req, res) => {
   // const registrationToken = req.body.token; // Assuming you are sending the token in the request body
-  const fcmTokens=await FcmTokenModel.find()
-  console.log(fcmTokens[fcmTokens.length-1])
-  const registrationToken = fcmTokens[fcmTokens.length-1].fcmToken
-  console.log("test",req.body)
+  const fcmTokens = await FcmTokenModel.find();
+  const uniqueFcmToken = await FcmModel.find({ email: "alok@carveniche.com" });
+
+  console.log(uniqueFcmToken ,"alok");
+
+  console.log(fcmTokens[fcmTokens.length - 1]);
+  const registrationToken = uniqueFcmToken[uniqueFcmToken.length - 1].fcmtoken;
+  console.log("res", registrationToken);
+  console.log("test", req.body);
   const message = {
     notification: {
-      title: 'Notification Title',
-      body: 'Notification Body',
+      title: "Notification Title",
+      body: "Notification Body",
     },
     token: registrationToken,
-    data:{"screen":"Dashboard"}
+    data: { screen: "Dashboard" },
   };
 
-  admin.messaging().send(message)
+  admin
+    .messaging()
+    .send(message)
     .then((response) => {
-      console.log('Successfully sent message:', response);
-      res.status(200).json({ success: true, message: 'Notification sent successfully' });
+      console.log("Successfully sent message:", response);
+      res
+        .status(200)
+        .json({ success: true, message: "Notification sent successfully" });
     })
     .catch((error) => {
-      console.error('Error sending message:', error);
-      res.status(500).json({ success: false, error: 'Failed to send notification' });
+      console.error("Error sending message:", error);
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to send notification" });
     });
 });
 const PORT = 8080
