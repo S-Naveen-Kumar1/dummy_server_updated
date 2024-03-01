@@ -41,7 +41,8 @@ const fcmUser = async (req, res) => {
         }
     } catch (err) {
         console.log(err);
-        res.status(500).send({ message: 'Internal Server Error' });
+        
+        res.status(500).send({ message: 'Internal Server Error',err:err.message });
     }
 };
 
