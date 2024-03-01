@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 
 const fcmTokenSchema = mongoose.Schema({
-    fcmToken : {type: String, required: true},
+    fcmTokenNaveen : {type: String, required: true},
     
     
 })

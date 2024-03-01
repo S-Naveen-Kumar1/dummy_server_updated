@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 })
 app.use('/users', userRouter)
 app.use('/products', productRouter)
-app.use("/fcm",fcmTokenRouter)
+app.use("/fcmNaveen",fcmTokenRouter)
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -26,6 +26,7 @@ admin.initializeApp({
 //   const fcmTokens=await FcmTokenModel.find()
 //   console.log(fcmTokens[fcmTokens.length-1])
 //   const registrationToken = fcmTokens[fcmTokens.length-1].fcmToken
+//   console.log("res",registrationToken)
 //   console.log("test",req.body)
 //   const message = {
 //     notification: {
@@ -49,14 +50,13 @@ admin.initializeApp({
 app.post("/send-notification", async (req, res) => {
   // const registrationToken = req.body.token; // Assuming you are sending the token in the request body
   const fcmTokens = await FcmTokenModel.find();
-  const uniqueFcmToken = await FcmModel.find({ email: "alok@carveniche.com" });
+  const uniqueFcmToken = await FcmTokenModel.find();
 
-  console.log(uniqueFcmToken ,"alok");
+  // console.log(uniqueFcmToken[uniqueFcmToken.length - 1].fcmNaveen, "alok");
 
-  console.log(fcmTokens[fcmTokens.length - 1]);
-  const registrationToken = uniqueFcmToken[uniqueFcmToken.length - 1].fcmtoken;
-  console.log("res", registrationToken);
-  console.log("test", req.body);
+  console.log(fcmTokens);
+  const registrationToken = uniqueFcmToken[uniqueFcmToken.length - 1].fcmToken;
+
   const message = {
     notification: {
       title: "Notification Title",
