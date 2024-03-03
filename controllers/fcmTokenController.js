@@ -2,7 +2,6 @@ const FcmTokenModel = require("../models/fcmToken.model")
 
 const postFcmToken= async(req,res)=>{
     
-    const {fcmToken}=req.body
     try{
         const fcm= new FcmTokenModel(req.body)
         await fcm.save()
